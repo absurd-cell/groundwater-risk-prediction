@@ -1,0 +1,4 @@
+Model,Accuracy,Precision,Recall,F1,At-risk recall,Log loss,AUC
+Baseline (2021 rule),0.897,0.9,0.905,0.902,0.979,,
+KNN,0.805,0.806,0.781,0.792,0.901,0.773,0.952
+Naive Bayes,0.824,0.819,0.814,0.812,0.95,0.827,0.969
