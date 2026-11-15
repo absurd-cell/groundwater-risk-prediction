@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Groundwater Watch: Haryana, Gujarat and Maharashtra</title>
+<style>
+:root{--bg:#eaf2f3;--card:#fff;--ink:#0d2b36;--mut:#52707c;--line:#cfdfe3;--water:#1b7f9e;--sand:#c8b48e;--low:#2a9d8f;--med:#e0952f;--high:#d6453d;--safe:#3aa76d;--watch:#e6c24a;--crit:#ee8f3e;--sev:#c93b3b;--hero:#0b3446;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#071a22;--card:#0e2733;--ink:#e3f0f3;--mut:#8fb0bb;--line:#1d3d4b;--water:#4db6d4;--sand:#7d6e55;--low:#3ec2b1;--med:#f0ac4a;--high:#f0645c;--hero:#04222e}}
+:root[data-theme="dark"]{--bg:#071a22;--card:#0e2733;--ink:#e3f0f3;--mut:#8fb0bb;--line:#1d3d4b;--water:#4db6d4;--sand:#7d6e55;--low:#3ec2b1;--med:#f0ac4a;--high:#f0645c;--hero:#04222e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Charter,"Iowan Old Style",Georgia,serif;font-weight:600;line-height:1.2;margin:0}
+.hero{background:var(--hero);color:#eaf6f8;padding:44px 20px 52px}
+.wrap{max-width:1080px;margin:0 auto}
+.hero h1{font-size:clamp(28px,5vw,46px);max-width:20ch;letter-spacing:-.01em}
+.hero p{max-width:60ch;margin:14px 0 0;color:#a9cbd4}
+main{padding:24px 20px 40px}
+.grid{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:860px){.grid{grid-template-columns:1.15fr 1fr}}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+section h2{font-size:21px}
+.sub{color:var(--mut);margin:4px 0 12px;font-size:14px;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+button,select{font:inherit;color:inherit}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--water);border-color:var(--water);color:#fff}
+:focus-visible{outline:2px solid var(--water);outline-offset:2px}
+svg text{fill:var(--mut);font:11px system-ui,sans-serif}
+.dot{cursor:pointer;transition:opacity .2s}
+.dot:focus-visible{outline:none;stroke:var(--ink);stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mut);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);margin:6px 0 12px}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;color:#fff;font-size:13px;margin-left:8px;vertical-align:middle}
+.detail{display:flex;gap:18px;align-items:flex-start}
+.gauge{flex:0 0 118px}
+.gauge rect.w{transition:y .5s,height .5s}
+dl{margin:0;flex:1}
+dt{color:var(--mut);font-size:13px}
+dd{margin:0 0 10px;font-size:19px;font-family:Charter,Georgia,serif}
+.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:12px 0 6px}
+.stack span{display:block;height:100%}
+.note{font-size:13px;color:var(--mut);margin:8px 0 0}
+.rank{list-style:none;margin:0;padding:0}
+.rank button{display:grid;grid-template-columns:130px 1fr 44px;gap:10px;align-items:center;width:100%;background:none;border:0;padding:6px 0;text-align:left;cursor:pointer}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px}
+.models{width:100%;border-collapse:collapse;font-size:14px}
+.models td{padding:5px 4px;border-bottom:1px solid var(--line)}
+.models td:nth-child(2){width:38%}
+.models tr.hl td:first-child{font-weight:700}
+.wide{grid-column:1/-1}
+footer{max-width:1080px;margin:0 auto;padding:0 20px 36px;color:var(--mut);font-size:13px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1 id="headline">Groundwater is falling in many districts.</h1>
+<p id="lede"></p>
+</div></header>
+<main class="wrap"><div class="grid">
+
+<section aria-labelledby="mapT">
+<h2 id="mapT">Districts at a glance</h2>
+<p class="sub">Each dot is a district, sized by its number of wells and coloured by stress group. Select a dot to read its water level.</p>
+<div class="chips" id="chips" role="group" aria-label="Filter by state"></div>
+<svg id="map" viewBox="0 0 420 330" role="img" aria-label="Map of districts by latitude and longitude" style="width:100%;height:auto"></svg>
+<div class="legend"><span><i style="background:var(--low)"></i>Low stress</span><span><i style="background:var(--med)"></i>Medium stress</span><span><i style="background:var(--high)"></i>High stress</span></div>
+</section>
+
+<section aria-labelledby="dT">
+<h2 id="dT">District water level</h2>
+<label for="pick" class="sub" style="display:block;margin-bottom:0">Choose a district</label>
+<select id="pick"></select>
+<div id="detail"></div>
+</section>
+
+<section aria-labelledby="rT">
+<h2 id="rT">Where to act first</h2>
+<p class="sub" id="rSub">Share of wells in the Critical or Severe class in 2022, for districts with at least 15 wells.</p>
+<ul class="rank" id="rank"></ul>
+</section>
+
+<section aria-labelledby="mT">
+<h2 id="mT">Which model to trust</h2>
+<p class="sub">F1 score on the 370 test wells. The first row is the plain rule “next year equals last year”, and almost nothing beats it.</p>
+<table class="models" id="models"><tbody></tbody></table>
+</section>
+
+</div></main>
+<footer>
+<p>Source: Atal Bhujal Yojana disclosed groundwater level data, 2015–2022, data.gov.in (Ministry of Jal Shakti). Depth is metres below ground, so a bigger number means deeper water. Risk classes are depth bands set by the project author, not official CGWB categories: Safe up to 10 m, Watch 10–20 m, Critical 20–40 m, Severe over 40 m or dry. Change is the 2021 minus 2015 pre-monsoon depth, and recovery is the average fall in depth after the monsoon.</p>
+</footer>
+<script>
+const D=[{"n":"Banaskantha","s":"G","w":91,"d":61.2,"c":4.3,"r":2.5,"p":83.5,"y":15.4,"k":2,"la":24.32,"lo":72.11,"rc":[4,11,16,60]},{"n":"Gandhinagar","s":"G","w":54,"d":81.8,"c":4.8,"r":3.2,"p":96.3,"y":1.9,"k":2,"la":23.27,"lo":72.7,"rc":[1,1,6,46]},{"n":"Kachchh","s":"G","w":79,"d":34.4,"c":4.1,"r":1.3,"p":54.4,"y":1.3,"k":1,"la":23.27,"lo":69.66,"rc":[23,13,17,26]},{"n":"Mahesana","s":"G","w":161,"d":51.1,"c":1.7,"r":2.9,"p":57.1,"y":1.2,"k":2,"la":23.64,"lo":72.45,"rc":[36,33,18,74]},{"n":"Patan","s":"G","w":51,"d":65.2,"c":2.3,"r":2.2,"p":70.6,"y":2.0,"k":2,"la":23.87,"lo":72.21,"rc":[1,14,9,27]},{"n":"Sabarkantha","s":"G","w":61,"d":23.1,"c":-0.5,"r":5.7,"p":44.3,"y":0.0,"k":0,"la":23.68,"lo":72.96,"rc":[6,28,22,5]},{"n":"Bhiwani","s":"H","w":86,"d":33.2,"c":3.2,"r":-0.0,"p":46.5,"y":0.0,"k":1,"la":28.71,"lo":75.83,"rc":[15,31,11,29]},{"n":"Charki Dadri","s":"H","w":19,"d":68.8,"c":4.8,"r":-0.3,"p":100.0,"y":0.0,"k":2,"la":28.53,"lo":75.96,"rc":[0,0,1,18]},{"n":"Faridabad","s":"H","w":41,"d":20.2,"c":3.7,"r":-0.1,"p":43.9,"y":0.0,"k":1,"la":28.34,"lo":77.33,"rc":[4,19,17,1]},{"n":"Fatehabad","s":"H","w":22,"d":30.1,"c":4.9,"r":-0.2,"p":68.2,"y":0.0,"k":1,"la":29.66,"lo":75.85,"rc":[3,4,10,5]},{"n":"Gurugram","s":"H","w":66,"d":30.5,"c":3.9,"r":0.2,"p":78.8,"y":1.5,"k":1,"la":28.37,"lo":76.96,"rc":[7,7,38,14]},{"n":"Kaithal","s":"H","w":41,"d":32.8,"c":6.5,"r":-0.9,"p":63.4,"y":0.0,"k":1,"la":29.87,"lo":76.39,"rc":[0,15,9,17]},{"n":"Karnal","s":"H","w":19,"d":15.8,"c":1.8,"r":0.9,"p":21.1,"y":0.0,"k":1,"la":29.69,"lo":77.03,"rc":[4,11,4,0]},{"n":"Kurukshetra","s":"H","w":53,"d":40.1,"c":5.6,"r":-1.1,"p":98.1,"y":0.0,"k":2,"la":30.04,"lo":76.76,"rc":[0,1,26,26]},{"n":"Mahendragarh","s":"H","w":53,"d":50.0,"c":4.8,"r":0.5,"p":88.7,"y":1.9,"k":2,"la":28.13,"lo":76.17,"rc":[3,3,19,28]},{"n":"Palwal","s":"H","w":71,"d":11.7,"c":2.0,"r":0.2,"p":7.0,"y":0.0,"k":1,"la":28.04,"lo":77.28,"rc":[25,41,5,0]},{"n":"Panipat","s":"H","w":27,"d":27.8,"c":5.4,"r":-0.2,"p":70.4,"y":0.0,"k":1,"la":29.26,"lo":77.05,"rc":[0,8,16,3]},{"n":"Rewari","s":"H","w":10,"d":48.0,"c":2.9,"r":-1.0,"p":90.0,"y":0.0,"k":2,"la":28.31,"lo":76.5,"rc":[0,1,3,6]},{"n":"Sirsa","s":"H","w":57,"d":31.2,"c":5.6,"r":-0.6,"p":71.9,"y":1.8,"k":1,"la":29.51,"lo":74.74,"rc":[5,11,24,17]},{"n":"Yamunanagar","s":"H","w":49,"d":14.4,"c":-0.7,"r":0.6,"p":18.4,"y":0.0,"k":0,"la":30.18,"lo":77.21,"rc":[24,16,9,0]},{"n":"Ahmednagar","s":"M","w":62,"d":6.6,"c":-1.3,"r":4.9,"p":0.0,"y":0.0,"k":0,"la":19.2,"lo":74.54,"rc":[60,2,0,0]},{"n":"Amravati","s":"M","w":66,"d":10.9,"c":-0.2,"r":4.1,"p":9.1,"y":1.5,"k":0,"la":21.38,"lo":78.04,"rc":[33,27,5,1]},{"n":"Buldhana","s":"M","w":30,"d":9.6,"c":-0.2,"r":4.9,"p":0.0,"y":0.0,"k":0,"la":20.77,"lo":76.15,"rc":[16,14,0,0]},{"n":"Jalgaon","s":"M","w":56,"d":14.0,"c":-0.7,"r":6.1,"p":26.8,"y":0.0,"k":0,"la":21.05,"lo":75.39,"rc":[34,7,15,0]},{"n":"Jalna","s":"M","w":46,"d":9.6,"c":-1.6,"r":6.7,"p":0.0,"y":0.0,"k":0,"la":19.63,"lo":76.09,"rc":[26,20,0,0]},{"n":"Latur","s":"M","w":76,"d":7.4,"c":-1.7,"r":6.1,"p":1.3,"y":0.0,"k":0,"la":18.36,"lo":76.66,"rc":[69,6,1,0]},{"n":"Nagpur","s":"M","w":30,"d":6.7,"c":0.3,"r":4.2,"p":0.0,"y":0.0,"k":0,"la":21.32,"lo":78.53,"rc":[28,2,0,0]},{"n":"Nashik","s":"M","w":53,"d":7.2,"c":-1.4,"r":4.7,"p":0.0,"y":0.0,"k":0,"la":19.99,"lo":74.02,"rc":[45,8,0,0]},{"n":"Osmanabad","s":"M","w":50,"d":9.4,"c":-0.5,"r":7.0,"p":0.0,"y":0.0,"k":0,"la":18.08,"lo":76.3,"rc":[29,21,0,0]},{"n":"Pune","s":"M","w":57,"d":6.5,"c":-1.8,"r":3.7,"p":0.0,"y":0.0,"k":0,"la":18.2,"lo":74.48,"rc":[52,5,0,0]},{"n":"Sangli","s":"M","w":70,"d":6.9,"c":-0.8,"r":3.1,"p":0.0,"y":0.0,"k":0,"la":17.06,"lo":74.91,"rc":[60,10,0,0]},{"n":"Satara","s":"M","w":57,"d":8.3,"c":-0.8,"r":4.3,"p":1.8,"y":0.0,"k":0,"la":17.71,"lo":74.34,"rc":[46,10,1,0]},{"n":"Solapur","s":"M","w":84,"d":8.0,"c":-0.4,"r":4.1,"p":1.2,"y":0.0,"k":0,"la":17.84,"lo":75.3,"rc":[71,12,0,1]}];
+const M=[["Plain rule: same as 2021",.902,.979,null],["Decision Tree",.900,.972,.970],["Random Forest (best all-round)",.898,.979,.982],["Bagging",.895,.979,.977],["Gradient Boosting",.890,.965,.981],["Neural network (MLP)",.872,.972,.979],["SVM, linear",.855,.972,.981],["SVM, RBF",.836,.950,.974],["Naive Bayes",.812,.950,.969],["SVM on 3 PCA parts",.796,.936,.955],["KNN",.792,.901,.952]];
+const NAMES=["Low stress","Medium stress","High stress"],COL=["var(--low)","var(--med)","var(--high)"];
+const ST={H:"Haryana",G:"Gujarat",M:"Maharashtra"},CLS=["Safe","Watch","Critical","Severe"],CV=["--safe","--watch","--crit","--sev"];
+const $=id=>document.getElementById(id);
+let sel=0,flt="A";
+const tot=D.reduce((a,d)=>a+d.w,0),atRisk=D.reduce((a,d)=>a+d.w*d.p/100,0);
+$("headline").textContent=Math.round(atRisk/tot*100)+"% of the wells we studied are already at risk.";
+$("lede").textContent="Water-level readings from "+tot.toLocaleString("en-US")+" monitoring wells in "+D.length+" districts of Haryana, Gujarat and Maharashtra, 2015–2022. Pick a district to see how deep the water has fallen.";
+sel=D.reduce((b,d,i)=>(d.w>=15&&d.p>D[b].p)?i:b,0);
+
+$("pick").innerHTML=D.map((d,i)=>`<option value="${i}">${d.n} (${ST[d.s]})</option>`).join("");
+$("pick").onchange=e=>{sel=+e.target.value;draw()};
+$("chips").innerHTML=[["A","All states"],["H","Haryana"],["G","Gujarat"],["M","Maharashtra"]].map(([k,t])=>`<button class="chip" data-k="${k}" aria-pressed="${k==="A"}">${t}</button>`).join("");
+$("chips").onclick=e=>{const b=e.target.closest("button");if(b){flt=b.dataset.k;draw()}};
+
+const la=D.map(d=>d.la),lo=D.map(d=>d.lo),a0=Math.min(...la),a1=Math.max(...la),o0=Math.min(...lo),o1=Math.max(...lo);
+const X=v=>30+(v-o0)/(o1-o0)*360,Y=v=>300-(v-a0)/(a1-a0)*265;
+
+function drawMap(){
+ let h="";
+ for(const k of ["H","G","M"]){const s=D.filter(d=>d.s===k);h+=`<text x="${X(s.reduce((a,d)=>a+d.lo,0)/s.length)}" y="${Y(Math.min(...s.map(d=>d.la)))+22}" text-anchor="middle">${ST[k]}</text>`}
+ D.forEach((d,i)=>{const on=flt==="A"||d.s===flt;
+  h+=`<circle class="dot" tabindex="0" role="button" aria-label="${d.n}, ${NAMES[d.k]}" cx="${X(d.lo)}" cy="${Y(d.la)}" r="${4+Math.sqrt(d.w)*.65}" fill="${COL[d.k]}" fill-opacity=".85" opacity="${on?1:.2}" stroke="${i===sel?"var(--ink)":"var(--card)"}" stroke-width="${i===sel?3:1}" data-i="${i}"><title>${d.n}: ${d.p}% of wells at risk</title></circle>`});
+ $("map").innerHTML=h;
+}
+$("map").onclick=e=>{const c=e.target.closest("circle");if(c){sel=+c.dataset.i;draw()}};
+$("map").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest("circle");if(c){e.preventDefault();sel=+c.dataset.i;draw()}}};
+
+function gauge(d){
+ const MAX=90,H=210,y=26+Math.min(d.d,MAX)/MAX*H;
+ let t="";for(let m=0;m<=80;m+=20){const yy=26+m/MAX*H;t+=`<line x1="44" x2="50" y1="${yy}" y2="${yy}" stroke="var(--mut)"/><text x="40" y="${yy+4}" text-anchor="end">${m} m</text>`}
+ return `<svg class="gauge" viewBox="0 0 118 250" role="img" aria-label="Water is ${d.d} metres below ground on average"><rect x="0" y="18" width="118" height="8" fill="var(--sand)"/><rect x="50" y="26" width="40" height="${H}" fill="none" stroke="var(--mut)"/><rect class="w" x="51" y="${y}" width="38" height="${26+H-y}" fill="var(--water)" opacity=".85"/>${t}<text x="96" y="${y-4}" style="fill:var(--ink);font-weight:600">${d.d} m</text></svg>`}
+
+function drawDetail(){
+ const d=D[sel],n=d.rc.reduce((a,b)=>a+b,0);
+ const ch=d.c>0?d.c+" m deeper":d.c<0?Math.abs(d.c)+" m shallower":"no change";
+ $("detail").innerHTML=`<h3>${d.n}<span class="badge" style="background:${COL[d.k]}">${NAMES[d.k]}</span></h3><p class="sub" style="margin:2px 0 10px">${ST[d.s]}, ${d.w} wells measured</p>
+ <div class="detail">${gauge(d)}<dl><dt>Average depth to water, 2022</dt><dd>${d.d} m</dd><dt>Change, 2015 to 2021</dt><dd>${ch}</dd><dt>Recovery after the monsoon</dt><dd>${d.r} m</dd><dt>Wells at risk (Critical or Severe)</dt><dd>${Math.round(d.p)}%</dd></dl></div>
+ <div class="stack" role="img" aria-label="Wells by risk class">${d.rc.map((v,i)=>`<span style="width:${v/n*100}%;background:var(${CV[i]})" title="${CLS[i]}: ${v}"></span>`).join("")}</div>
+ <div class="legend">${d.rc.map((v,i)=>`<span><i style="background:var(${CV[i]})"></i>${CLS[i]} ${v}</span>`).join("")}</div>`+(d.w<15?`<p class="note">Only ${d.w} wells here, so treat these figures with care.</p>`:"")+(d.y>0?`<p class="note">${d.y}% of wells went dry in 2022.</p>`:"");
+ $("pick").value=sel;
+}
+
+function drawRank(){
+ const rows=D.map((d,i)=>[d,i]).filter(([d])=>d.w>=15&&(flt==="A"||d.s===flt)).sort((a,b)=>b[0].p-a[0].p).slice(0,8);
+ $("rank").innerHTML=rows.map(([d,i])=>`<li><button data-i="${i}" aria-label="${d.n}, ${Math.round(d.p)} percent at risk"><span>${d.n}${i===sel?" ◂":""}</span><span class="bar"><i style="width:${d.p}%;background:${COL[d.k]}"></i></span><span>${Math.round(d.p)}%</span></button></li>`).join("");
+}
+$("rank").onclick=e=>{const b=e.target.closest("button");if(b){sel=+b.dataset.i;draw()}};
+
+$("models").tBodies[0].innerHTML=M.map((m,i)=>`<tr class="${i===2?"hl":""}"><td>${m[0]}</td><td><span class="bar"><i style="width:${m[1]*100}%;background:var(--water)"></i></span></td><td>${m[1].toFixed(3)}</td><td title="Share of truly Critical or Severe wells found">${m[2].toFixed(3)}</td></tr>`).join("");
+$("models").createTHead().innerHTML="<tr><td style=\"color:var(--mut)\">Model</td><td></td><td style=\"color:var(--mut)\">F1</td><td style=\"color:var(--mut)\">At-risk recall</td></tr>";
+
+function draw(){
+ document.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===flt));
+ drawMap();drawDetail();drawRank();
+}
+draw();
+</script>
+</body>
+</html>
